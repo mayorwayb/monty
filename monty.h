@@ -38,5 +38,6 @@ typedef struct instruction_s
 
 void add_top_two_elements(stack_t **head, unsigned int counter);
 void pop_top(stack_t **head);
+void push_to_stack(stack_t **head, int value);
 
 #endif
