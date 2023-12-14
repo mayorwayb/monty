@@ -35,12 +35,22 @@ typedef struct instruction_s
         char *opcode;
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-
-typedef struct {
-   bus_t bus = {NULL, NULL, NULL, 0};
-} bus_t;
-
-extern bus_t bus(bus_t bus = {NULL, NULL, NULL, 0});
+/**
+ * struct bus_s - variables -args, file, line content
+ * @arg: value
+ * @file: pointer to monty file
+ * @content: line content
+ * @lifi: flag change stack <-> queue
+ * Description: carries values through the program
+ */
+typedef struct bus_s
+{
+	char *arg;
+	FILE *file;
+	char *content;
+	int lifi;
+}  bus_t;
+extern bus_t bus;
 void add_top_two_elements(stack_t **head, unsigned int counter);
 void pop_top(stack_t **head);
 void push_to_stack(stack_t **head, int value);
@@ -48,12 +58,18 @@ void divide_top_two_elements(stack_t **head, unsigned int counter);
 int execute(char *content, stack_t **stack, unsigned int counter, FILE *file);
 void free_stack(stack_t *head);
 int main(int argc, char *argv[]);
-bus_t bus = {NULL, NULL, NULL, 0};
 void f_mod(stack_t **head, unsigned int counter);
 void f_mul(stack_t **head, unsigned int counter);
 void f_nop(stack_t **head, unsigned int counter);
 void f_pall(stack_t **head, unsigned int counter);
 void f_pchar(stack_t **head, unsigned int counter);
 void f_pint(stack_t **head, unsigned int counter);
+void f_pop(stack_t **head, unsigned int counter);
+void f_pstr(stack_t **head, unsigned int counter);
+void f_queue(stack_t **head, unsigned int counter);
+void addqueue(stack_t **head, int n);
+void f_rotl(stack_t **head, __attribute__((unused)) unsigned int counter);
+void f_rotr(stack_t **head, __attribute__((unused)) unsigned int counter);
+void f_stack(stack_t **head, unsigned int counter);
 
 #endif
