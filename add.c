@@ -8,6 +8,8 @@
  */
 void add_top_two_elements(stack_t **head, unsigned int counter)
 {
+	int sum = (*head)->n + (*head)->next->n;
+
 	if (*head == NULL || (*head)->next == NULL)
 	{
 		fprintf(stderr, "L%d: can't add, stack too short\n", counter);
@@ -16,8 +18,6 @@ void add_top_two_elements(stack_t **head, unsigned int counter)
 		free_stack(*head);
 		exit(EXIT_FAILURE);
 	}
-
-	int sum = (*head)->n + (*head)->next->n;
 
 	pop_top(head);
 	(*head)->n = sum;

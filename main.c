@@ -1,5 +1,10 @@
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "monty.h"
 
+bus_t bus = {NULL, NULL, NULL, 0};
 /**
  * main - Monty code interpreter
  * @argc: Number of arguments

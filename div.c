@@ -8,6 +8,8 @@
  */
 void divide_top_two_elements(stack_t **head, unsigned int counter)
 {
+	int result = (*head)->next->n / (*head)->n;
+
 	if (*head == NULL || (*head)->next == NULL)
 	{
 		fprintf(stderr, "L%d: can't div, stack too short\n", counter);
@@ -25,8 +27,6 @@ void divide_top_two_elements(stack_t **head, unsigned int counter)
 		free_stack(*head);
 		exit(EXIT_FAILURE);
 	}
-
-	int result = (*head)->next->n / (*head)->n;
 
 	pop_top(head);
 	(*head)->n = result;
