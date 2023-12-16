@@ -52,11 +52,6 @@ typedef struct bus_s
 }  bus_t;
 extern bus_t bus;
 
-instruction_t opst[] = {
-    {"push", f_push}, {"pall", f_pall}, {"pint", f_pint},
-    // ... other instructions ...
-    {NULL, NULL}
-};
 void add_top_two_elements(stack_t **head, unsigned int counter);
 void pop_top(stack_t **head);
 void push_to_stack(stack_t **head, int value);
@@ -80,7 +75,5 @@ void f_stack(stack_t **head, unsigned int counter);
 void f_sub(stack_t **head, unsigned int counter);
 void f_swap(stack_t **head, unsigned int counter);
 void addnode(stack_t **head, int n);
-void f_push(stack_t **stack, unsigned int counter);
-void f_pall(stack_t **stack, unsigned int counter);
-void f_pint(stack_t **stack, unsigned int counter);
+
 #endif
