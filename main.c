@@ -1,57 +1,77 @@
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "monty.h"
+#include <stdio.h>
 
-bus_t bus = {NULL, NULL, NULL, 0};
+cmds *command_list = NULL;
+
 /**
- * main - Monty code interpreter
- * @argc: Number of arguments
- * @argv: Monty file location
- * Return: 0 on success
+ * is_blank - Checks for blank spaces in a string.
+ *
+ * @s: Source string
+ * Return: 0 if successful (no blank spaces), 1 otherwise
  */
-int main(int argc, char *argv[])
+int is_blank(char *s)
 {
-	char *content;
+	size_t i = 0;
+
+	for (; s[i] && (s[i] == ' ' || s[i] == '\t'); i++)
+		;
+	return (s[i] == '\0');
+}
+
+/**
+ * main - Entry point, evaluates the path name.
+ *
+ * @argc: Number of arguments.
+ * @argv: Array of arguments.
+ * Return: EXIT_SUCCESS, EXIT_FAILURE.
+ */
+int main(int argc, char **argv)
+{
 	FILE *file;
-	size_t size = 0;
-	ssize_t read_line = 1;
+	char *line = NULL;
+	size_t line_length;
+	int read;
 	stack_t *stack = NULL;
-	unsigned int counter = 0;
+	cmds *current_command;
 
 	if (argc != 2)
 	{
-		fprintf(stderr, "USAGE: monty file\n");
+		dprintf(STDERR_FILENO, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
 	file = fopen(argv[1], "r");
-	bus.file = file;
-
 	if (!file)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
 
-	while (read_line > 0)
+	for (line_length = 0; (read = getline(&line, &line_length, file)) != EOF;)
 	{
-		content = NULL;
-		read_line = getline(&content, &size, file);
-		bus.content = content;
-		counter++;
+		line[read - 1] = '\0';
 
-		if (read_line > 0)
+		if (is_blank(line) || handle_comments(&line) || !(*line))
+			continue;
+
+		current_command = build_command_node(&command_list, line, line_length);
+		if (!current_command)
 		{
-			execute(content, &stack, counter, file);
+			dprintf(STDERR_FILENO, "Error: malloc failed\n");
+			free_stack(&stack);
+			exit(EXIT_FAILURE);
 		}
-
-		free(content);
 	}
 
-	free_stack(stack);
+	free(line);
 	fclose(file);
 
-	return (0);
+	while (command_list)
+	{
+		execute_ops(&stack);
+		free_command_node(&command_list);
+	}
+
+	free_stack(&stack);
+	return EXIT_SUCCESS;
 }
